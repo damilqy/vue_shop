@@ -79,7 +79,16 @@ export default {
         //判断valid的true或false
         if (!valid) return;
         const { data: res } = await this.$http.post('login', this.LoginForm)
-        console.log(res)
+        console.log(res.data)
+        //判断 status状态
+        if (res.meta.status !== 200) {
+          return this.$message.error('登录失败')
+        }
+        this.$message.success('登录成功')
+        //1.登录成功后，拿取token值存储在客户端
+        window.sessionStorage.setItem('token', res.data.token)
+        //2.通过路由导航跳转到home页面
+        this.$router.push('/home')
       })
     }
   }
