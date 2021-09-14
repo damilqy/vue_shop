@@ -10,6 +10,13 @@ import './assets/fonts/iconfont.css'
 import axios from 'axios'
 //请求更路径
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
+//在进行挂载前先添加拦截器（interceptors）
+axios.interceptors.request.use(config =>{
+  // console.log(config)
+  config.headers.Authorization = window.sessionStorage.getItem('token')
+  //必须要return
+  return config
+})
 //通过vue原型对象进行$http的挂载
 Vue.prototype.$http = axios
 

@@ -4,6 +4,10 @@ import VueRouter from 'vue-router'
 import Login from '@/components/Login.vue'
 //导入home的组件
 import Home from '@/components/Home.vue'
+//导入welcome组件
+import Welcome from '@/components/Welcome.vue'
+//导入子路由user组件
+import User from '@/components/User/User.vue'
 
 Vue.use(VueRouter)
 
@@ -12,7 +16,12 @@ const router = new VueRouter({
     //设置登录页面的路由规则，并设置重定义的路由规则
     {path:'/',redirect:'/login'},
     {path:'/login',component:Login},
-    {path:'/home',component:Home}
+    //设置home主页的路由规则
+    {path:'/home',component:Home,redirect:'/welcome',
+    children:[
+    {path:'/welcome',component:Welcome},
+    {path:'/users',component:User}
+    ]}
   ]
 })
 //设置路由前置守卫
