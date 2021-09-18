@@ -2,12 +2,16 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 //导入需要用到的组件
 import Login from '@/components/Login.vue'
-//导入home的组件
+//导入home
 import Home from '@/components/Home.vue'
-//导入welcome组件
+//导入welcome
 import Welcome from '@/components/Welcome.vue'
-//导入子路由user组件
+//导入子路由user
 import User from '@/components/User/User.vue'
+//导入子路由right.vue
+import Rights from '@/components/power/Rights.vue'
+//导入roles
+import Roles from '@/components/power/Roles.vue'
 
 Vue.use(VueRouter)
 
@@ -20,7 +24,7 @@ const router = new VueRouter({
     {path:'/home',component:Home,redirect:'/welcome',
     children:[
     {path:'/welcome',component:Welcome},
-    {path:'/users',component:User}
+    {path:'/users',component:User},{path:'/rights',component:Rights},{path:'/roles',component:Roles}
     ]}
   ]
 })
