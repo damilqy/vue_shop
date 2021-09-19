@@ -119,12 +119,11 @@
         node-key="id"
         default-expand-all
         :default-checked-keys="defkeys"
+        ref="treeRef"
       ></el-tree>
       <span slot="footer" class="dialog-footer">
         <el-button @click="setRightDialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="setRightDialogVisible = false"
-          >确 定</el-button
-        >
+        <el-button type="primary" @click="allotRights">确 定</el-button>
       </span>
     </el-dialog>
     <!-- 添加角色的对话框 -->
@@ -210,7 +209,8 @@ export default {
       //定义修改用户的对话框的显示和隐藏
       editDialogVisible: false,
       editForm: {
-        roleDesc: ''
+        roleDesc: '',
+        roleName: ''
       },
       editFormRules: {
         roleDesc: [
@@ -230,7 +230,9 @@ export default {
         children: 'children'
       },
       //默认展开时勾选的id值数组
-      defkeys: []
+      defkeys: [],
+      //定义拿取分配权限里的默认id
+      roleId: ''
     }
   },
   created () {
@@ -264,7 +266,7 @@ export default {
     },
     //修改角色表单
     async showEditDialog (id) {
-      console.log(id)
+      // console.log(id)
       const { data: res } = await this.$http.get('roles/' + id)
       if (res.meta.status !== 200) {
         return this.$message.error('失败')
@@ -276,10 +278,10 @@ export default {
     editDialogClosed () {
       this.$refs.editFormRef.resetFields()
     },
-    editUserInfo (id) {
+    editUserInfo () {
       this.$refs.editFormRef.validate(async valid => {
         if (!valid) return
-        const { data: res } = await this.$http.put(`roles/${id}`)
+        const { data: res } = await this.$http.put('roles/' + this.editForm.id, { roleName: this.editForm.roleName, roleDesc: this.editForm.roleDesc })
         console.log(res)
         if (res.meta.status !== 200) {
           return this.$message.error('修改用户失败')
@@ -316,7 +318,7 @@ export default {
       if (confirmResult !== 'confirm') {
         return this.$message.info('您已取消删除')
       }
-      const { data: res } = await this.$http.delete(`roles/${role.id}/rights/${rightId}`)
+      const { data: res } = await this.$http.delete(`roles / ${role.id} / rights / ${rightId}`)
       if (res.meta.status !== 200) {
         return this.$message.error('删除文件失败')
       }
@@ -327,6 +329,7 @@ export default {
     },
     //显示分配角色对话框的处理函数
     async showSetRightDialog (role) {
+      this.roleId = role.id
       //调用获取分配全限的API
       const { data: res } = await this.$http.get('rights/tree')
       if (res.meta.status !== 200) {
@@ -353,6 +356,23 @@ export default {
     setRightDialogClosed () {
       //当关闭对话框就清空数组
       this.defkeys = []
+    },
+    //定义添加节点和子节点的函数
+    async allotRights () {
+      const keys = [
+        ...this.$refs.treeRef.getCheckedKeys(),
+        //获取半选状态的节点
+        ...this.$refs.treeRef.getHalfCheckedKeys()
+      ]
+      // console.log(keys)  打印是否拿到id
+      const idStr = keys.join(',')//用字符串拼接
+      const { data: res } = await this.$http.post(`roles / ${this.roleId} / rights`, { rids: idStr })
+      if (res.meta.status !== 200) {
+        return this.$message.error('添加权限分配失败')
+      }
+      this.$message.success('添加权限分配成功')
+      this.getRolesList()
+      this.setRightDialogVisible = false
     }
   }
 }
