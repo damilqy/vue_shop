@@ -300,7 +300,7 @@ export default {
       if (confirmResult !== 'confirm') {
         return this.$message.info('您已取消删除')
       }
-      const { data: res } = await this.$http.delete('roles/' + id)
+      const { data: res } = await this.$http.delete(`roles/${this.editForm.id}`)
       if (res.meta.status !== 200) {
         return this.$message.error('删除角色失败')
       }
