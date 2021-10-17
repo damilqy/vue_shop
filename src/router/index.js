@@ -13,6 +13,7 @@ import Rights from '@/components/power/Rights.vue'
 //导入roles
 import Roles from '@/components/power/Roles.vue'
 //导入Cate组件
+//导入Cate.vue 
 import Cate from '@/components/goods/Cate.vue'
 
 Vue.use(VueRouter)
