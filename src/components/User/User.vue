@@ -178,7 +178,7 @@
           分配新角色：<el-select v-model="SelectedRoleId" placeholder="请选择">
             <el-option
               v-for="item in rolesList"
-              :key="item.value"
+              :key="item.id"
               :label="item.roleName"
               :value="item.id"
             >
